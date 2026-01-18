@@ -1,0 +1,51 @@
+name: Test Pull Request
+
+on:
+  pull_request:
+    branches: [ "main", "develop" ]
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up JDK 11
+      uses: actions/setup-java@v4
+      with:
+        java-version: '11'
+        distribution: 'temurin'
+        cache: gradle
+
+    - name: Grant execute permission for gradlew
+      run: chmod +x ./gradlew
+      working-directory: ./TyperX
+
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v3
+      with:
+        packages: |
+          platforms;android-34
+          build-tools;34.0.0
+
+    - name: Run unit tests
+      run: ./gradlew test
+      working-directory: ./TyperX
+
+    - name: Build debug APK
+      run: ./gradlew assembleDebug
+      working-directory: ./TyperX
+
+    - name: Run lint
+      run: ./gradlew lint
+      working-directory: ./TyperX
+
+    - name: Upload reports
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-reports
+        path: TyperX/app/build/reports/
