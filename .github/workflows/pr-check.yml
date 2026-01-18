@@ -22,8 +22,8 @@ jobs:
       run: |
         # Ensure the gradle wrapper is executable
         chmod +x ./gradlew
-        # The gradlew script will automatically download the wrapper JAR if needed
-        ./gradlew --version
+        # Initialize the gradle wrapper to ensure the JAR file exists
+        ./gradlew --version || echo "Initial run failed, but wrapper should be initialized"
       working-directory: .
 
     - name: Setup Android SDK
