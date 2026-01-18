@@ -19,10 +19,14 @@ jobs:
         java-version: 17
 
     - name: Setup Android SDK
-      uses: android-actions/setup-android@v3
-      with:
-        packages: platforms;android-33,build-tools;33.0.0,platform-tools
-        accept-android-sdk-licenses: true
+      run: |
+        # Accept licenses first
+        echo "y" | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
+        
+        # Install packages individually to avoid issues
+        $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platforms;android-33"
+        $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "build-tools;33.0.0" 
+        $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platform-tools"
 
     - name: Set execute permissions for gradlew
       run: chmod +x ./gradlew
