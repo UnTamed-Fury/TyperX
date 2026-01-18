@@ -23,19 +23,19 @@ jobs:
         java-version: 17
 
     - run: chmod +x ./gradlew
-      working-directory: .
+      working-directory: ${{ github.workspace }}
 
     - name: Clean
       run: ./gradlew clean
-      working-directory: .
+      working-directory: ${{ github.workspace }}
 
     - name: Build Release (Android 11+)
       run: ./gradlew assembleRelease -PminSdk=30
-      working-directory: .
+      working-directory: ${{ github.workspace }}
 
     - name: Unit tests
       run: ./gradlew testReleaseUnitTest
-      working-directory: .
+      working-directory: ${{ github.workspace }}
 
     - uses: actions/upload-artifact@v4
       with:
