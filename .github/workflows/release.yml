@@ -15,25 +15,25 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - uses: actions/setup-java@v4
+    - name: Setup Java
+      uses: actions/setup-java@v4
       with:
         distribution: temurin
         java-version: 17
 
-    - name: Restore keystore from SIGNING_KEY
-      run: echo "${{ secrets.SIGNING_KEY }}" | base64 -d > typerx.jks
+    - name: Grant execute permission for gradlew
+      run: chmod +x ./gradlew
       working-directory: .
 
     - name: Setup Android SDK
-      uses: android-actions/setup-android@v3
-      with:
-        packages: |
-          platforms;android-33
-          build-tools;33.0.0
-          platform-tools
-        accept-android-sdk-licenses: true
-      env:
-        SKIP_JDK_VERSION_CHECK: true
+      run: |
+        echo "y" | ${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager --licenses
+        ${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager "platforms;android-33" "build-tools;33.0.0" "platform-tools"
+      working-directory: .
+
+    - name: Restore keystore from SIGNING_KEY
+      run: echo "${{ secrets.SIGNING_KEY }}" | base64 -d > typerx.jks
+      working-directory: .
 
     - name: Build Signed APK
       run: |
