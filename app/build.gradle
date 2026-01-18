@@ -10,12 +10,12 @@ apply plugin: 'io.gitlab.arturbosch.detekt'
 
 android {
     namespace 'com.typerx'
-    compileSdk 34
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.typerx"
         minSdk 24
-        targetSdk 34
+        targetSdk 33
         versionCode 1
         versionName "1.0"
 
