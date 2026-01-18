@@ -22,7 +22,7 @@ jobs:
 
     - name: Grant execute permission for gradlew
       run: chmod +x ./gradlew
-      working-directory: ./TyperX
+      working-directory: .
 
     - name: Setup Android SDK
       uses: android-actions/setup-android@v3
@@ -33,19 +33,19 @@ jobs:
 
     - name: Run unit tests
       run: ./gradlew test
-      working-directory: ./TyperX
+      working-directory: .
 
     - name: Build debug APK
       run: ./gradlew assembleDebug
-      working-directory: ./TyperX
+      working-directory: .
 
     - name: Run lint
       run: ./gradlew lint
-      working-directory: ./TyperX
+      working-directory: .
 
     - name: Upload reports
       if: failure()
       uses: actions/upload-artifact@v4
       with:
         name: test-reports
-        path: TyperX/app/build/reports/
+        path: app/build/reports/
