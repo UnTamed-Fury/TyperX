@@ -12,10 +12,6 @@ jobs:
   release:
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        working-directory: ${{ github.workspace }}
-
     steps:
     - uses: actions/checkout@v4
 
@@ -24,8 +20,16 @@ jobs:
         distribution: temurin
         java-version: 17
 
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v3
+      with:
+        packages: platforms;android-33, build-tools;33.0.0, platform-tools
+        accept-android-sdk-licenses: true
+      env:
+        SKIP_JDK_VERSION_CHECK: true
+
     - name: Set execute permissions for gradlew
-      run: chmod +x gradlew
+      run: chmod +x ./gradlew
 
     - name: Restore keystore from SIGNING_KEY
       run: echo "$SIGNING_KEY" | base64 -d > typerx.jks
