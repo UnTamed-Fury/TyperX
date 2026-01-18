@@ -2,7 +2,7 @@ name: Test Recent Changes
 
 on:
   push:
-    branches: [ "main", "develop", "feature/**" ]
+    branches: [ "main", "develop" ]
 
 jobs:
   test:
@@ -28,7 +28,7 @@ jobs:
       uses: android-actions/setup-android@v3
       with:
         packages: |
-          platforms;android-33
+          platforms;android-34
           build-tools;34.0.0
 
     - name: Run static analysis
@@ -47,7 +47,7 @@ jobs:
     - name: Run connected tests
       uses: reactivecircus/android-emulator-runner@v2
       with:
-        api-level: 30
+        api-level: 34
         script: ./gradlew connectedAndroidTest
         working-directory: .
 
