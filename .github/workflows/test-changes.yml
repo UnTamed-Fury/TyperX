@@ -30,7 +30,7 @@ jobs:
         SKIP_JDK_VERSION_CHECK: true
       with:
         packages: |
-          platforms;android-34
+          platforms;android-33
           build-tools;34.0.0
 
     - name: Run static analysis
