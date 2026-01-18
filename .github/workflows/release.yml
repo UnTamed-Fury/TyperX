@@ -31,7 +31,7 @@ jobs:
         packages: |
           platforms;android-33
           build-tools;34.0.0
-          ndk-bundle
+          
 
     - name: Run tests
       run: ./gradlew test
