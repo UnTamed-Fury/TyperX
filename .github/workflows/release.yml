@@ -21,8 +21,12 @@ jobs:
         distribution: temurin
         java-version: 17
 
-    - name: Grant execute permission for gradlew
-      run: chmod +x ./gradlew
+    - name: Setup Gradle Wrapper
+      run: |
+        # Ensure the gradle wrapper is executable
+        chmod +x ./gradlew
+        # The gradlew script will automatically download the wrapper JAR if needed
+        ./gradlew --version
       working-directory: .
 
     - name: Setup Android SDK
