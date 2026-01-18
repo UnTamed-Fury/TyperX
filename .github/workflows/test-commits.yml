@@ -22,20 +22,25 @@ jobs:
         distribution: temurin
         java-version: 17
 
-    - run: chmod +x ./gradlew
-      working-directory: ${{ github.workspace }}
+    - name: Set execute permissions for gradlew
+      run: |
+        chmod +x $GITHUB_WORKSPACE/gradlew
+      shell: bash
 
     - name: Clean
-      run: ./gradlew clean
-      working-directory: ${{ github.workspace }}
+      run: |
+        $GITHUB_WORKSPACE/gradlew clean
+      shell: bash
 
     - name: Build Release (Android 11+)
-      run: ./gradlew assembleRelease -PminSdk=30
-      working-directory: ${{ github.workspace }}
+      run: |
+        $GITHUB_WORKSPACE/gradlew assembleRelease -PminSdk=30
+      shell: bash
 
     - name: Unit tests
-      run: ./gradlew testReleaseUnitTest
-      working-directory: ${{ github.workspace }}
+      run: |
+        $GITHUB_WORKSPACE/gradlew testReleaseUnitTest
+      shell: bash
 
     - uses: actions/upload-artifact@v4
       with:
