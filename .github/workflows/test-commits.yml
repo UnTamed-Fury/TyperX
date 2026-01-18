@@ -12,6 +12,10 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        working-directory: ${{ github.workspace }}
+
     steps:
     - uses: actions/checkout@v4
       with:
@@ -23,24 +27,16 @@ jobs:
         java-version: 17
 
     - name: Set execute permissions for gradlew
-      run: |
-        chmod +x $GITHUB_WORKSPACE/gradlew
-      shell: bash
+      run: chmod +x gradlew
 
     - name: Clean
-      run: |
-        $GITHUB_WORKSPACE/gradlew clean
-      shell: bash
+      run: ./gradlew clean
 
     - name: Build Release (Android 11+)
-      run: |
-        $GITHUB_WORKSPACE/gradlew assembleRelease -PminSdk=30
-      shell: bash
+      run: ./gradlew assembleRelease -PminSdk=30
 
     - name: Unit tests
-      run: |
-        $GITHUB_WORKSPACE/gradlew testReleaseUnitTest
-      shell: bash
+      run: ./gradlew testReleaseUnitTest
 
     - uses: actions/upload-artifact@v4
       with:

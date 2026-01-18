@@ -12,6 +12,10 @@ jobs:
   release:
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        working-directory: ${{ github.workspace }}
+
     steps:
     - uses: actions/checkout@v4
 
@@ -21,23 +25,18 @@ jobs:
         java-version: 17
 
     - name: Set execute permissions for gradlew
-      run: |
-        chmod +x $GITHUB_WORKSPACE/gradlew
-      shell: bash
+      run: chmod +x gradlew
 
     - name: Restore keystore from SIGNING_KEY
-      run: |
-        echo "$SIGNING_KEY" | base64 -d > typerx.jks
-      shell: bash
+      run: echo "$SIGNING_KEY" | base64 -d > typerx.jks
       env:
         SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
 
     - name: Build Signed APK
       run: |
-        $GITHUB_WORKSPACE/gradlew assembleRelease \
+        ./gradlew assembleRelease \
         -PminSdk=30 \
         -PversionName=${{ inputs.version }}
-      shell: bash
       env:
         KEYSTORE_FILE: typerx.jks
         KEY_ALIAS: ${{ secrets.ALIAS }}
