@@ -1,0 +1,39 @@
+name: Test Commits
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: "Branch to test"
+        required: true
+        default: "main"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        ref: ${{ inputs.branch }}
+
+    - uses: actions/setup-java@v4
+      with:
+        distribution: temurin
+        java-version: 17
+
+    - run: chmod +x gradlew
+
+    - name: Clean
+      run: ./gradlew clean
+
+    - name: Build Release (Android 11+)
+      run: ./gradlew assembleRelease -PminSdk=30
+
+    - name: Unit tests
+      run: ./gradlew testReleaseUnitTest
+
+    - uses: actions/upload-artifact@v4
+      with:
+        name: tested-release
+        path: app/build/outputs/apk/release/*.apk

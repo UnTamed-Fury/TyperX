@@ -10,12 +10,12 @@ apply plugin: 'io.gitlab.arturbosch.detekt'
 
 android {
     namespace 'com.typerx'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.typerx"
-        minSdk 24
-        targetSdk 33
+        minSdk 30      // Android 11 enforced
+        targetSdk 34
         versionCode 1
         versionName "1.0"
 
@@ -25,9 +25,19 @@ android {
         }
     }
 
+    signingConfigs {
+        release {
+            storeFile file(System.getenv("KEYSTORE_FILE") ?: "typerx.jks")
+            storePassword System.getenv("KEYSTORE_PASSWORD")
+            keyAlias System.getenv("KEY_ALIAS")
+            keyPassword System.getenv("KEY_PASSWORD")
+        }
+    }
+
     buildTypes {
         release {
-            minifyEnabled false
+            signingConfig signingConfigs.release
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
