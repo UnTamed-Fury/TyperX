@@ -33,17 +33,20 @@ jobs:
       env:
         SKIP_JDK_VERSION_CHECK: true
 
-    - name: Set execute permissions for gradlew
-      run: chmod +x ./gradlew
+    - run: chmod +x ./gradlew
+      working-directory: .
 
     - name: Clean
       run: ./gradlew clean
+      working-directory: .
 
     - name: Build Release (Android 11+)
       run: ./gradlew assembleRelease -PminSdk=30
+      working-directory: .
 
     - name: Unit tests
       run: ./gradlew testReleaseUnitTest
+      working-directory: .
 
     - uses: actions/upload-artifact@v4
       with:
