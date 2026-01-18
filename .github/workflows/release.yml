@@ -27,17 +27,14 @@ jobs:
 
     - name: Setup Android SDK
       uses: android-actions/setup-android@v3
-      env:
+      with:
         packages: |
           platforms;android-33
           build-tools;34.0.0
           platform-tools
+        accept-android-sdk-licenses: true
+      env:
         SKIP_JDK_VERSION_CHECK: true
-      with:
-          platforms;android-33
-          platform-tools
-          build-tools;34.0.0
-          platform-tools
 
     - name: Run tests
       run: ./gradlew test
@@ -56,10 +53,6 @@ jobs:
         keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
         keyPassword: ${{ secrets.KEY_PASSWORD }}
       env:
-        packages: |
-          platforms;android-33
-          build-tools;34.0.0
-          platform-tools
         BUILD_TOOLS_VERSION: "34.0.0"
 
     - name: Generate Release Notes
@@ -94,10 +87,6 @@ jobs:
       id: create_release
       uses: actions/create-release@v1
       env:
-        packages: |
-          platforms;android-33
-          build-tools;34.0.0
-          platform-tools
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         tag_name: ${{ github.ref }}
@@ -109,10 +98,6 @@ jobs:
     - name: Upload Release Asset
       uses: actions/upload-release-asset@v1
       env:
-        packages: |
-          platforms;android-33
-          build-tools;34.0.0
-          platform-tools
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
