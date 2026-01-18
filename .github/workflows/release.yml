@@ -28,10 +28,7 @@ jobs:
     - name: Setup Android SDK
       uses: android-actions/setup-android@v3
       with:
-        packages: |
-          platforms;android-33
-          build-tools;33.0.2
-          platform-tools
+        packages: platforms;android-33, build-tools;33.0.0, platform-tools
         accept-android-sdk-licenses: true
       env:
         SKIP_JDK_VERSION_CHECK: true
@@ -53,7 +50,7 @@ jobs:
         keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
         keyPassword: ${{ secrets.KEY_PASSWORD }}
       env:
-        BUILD_TOOLS_VERSION: "34.0.0"
+        BUILD_TOOLS_VERSION: "33.0.0"
 
     - name: Generate Release Notes
       id: release_notes
