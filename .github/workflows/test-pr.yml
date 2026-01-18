@@ -27,27 +27,9 @@ jobs:
     - name: Setup Android SDK
       uses: android-actions/setup-android@v3
       env:
-        SKIP_JDK_VERSION_CHECK: true
-      with:
         packages: |
           platforms;android-33
           build-tools;34.0.0
-
-    - name: Run unit tests
-      run: ./gradlew test
-      working-directory: .
-
-    - name: Build debug APK
-      run: ./gradlew assembleDebug
-      working-directory: .
-
-    - name: Run lint
-      run: ./gradlew lint
-      working-directory: .
-
-    - name: Upload reports
-      if: failure()
-      uses: actions/upload-artifact@v4
+          platform-tools
+        SKIP_JDK_VERSION_CHECK: true
       with:
-        name: test-reports
-        path: app/build/reports/

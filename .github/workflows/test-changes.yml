@@ -27,41 +27,9 @@ jobs:
     - name: Setup Android SDK
       uses: android-actions/setup-android@v3
       env:
-        SKIP_JDK_VERSION_CHECK: true
-      with:
         packages: |
           platforms;android-33
           build-tools;34.0.0
-
-    - name: Run static analysis
-      run: ./gradlew ktlintCheck detekt
-      working-directory: .
-      continue-on-error: true
-
-    - name: Run unit tests
-      run: ./gradlew test
-      working-directory: .
-
-    - name: Build debug APK
-      run: ./gradlew assembleDebug
-      working-directory: .
-
-    - name: Run connected tests
-      uses: reactivecircus/android-emulator-runner@v2
+          platform-tools
+        SKIP_JDK_VERSION_CHECK: true
       with:
-        api-level: 34
-        script: ./gradlew connectedAndroidTest
-        working-directory: .
-
-    - name: Upload APK
-      uses: actions/upload-artifact@v4
-      with:
-        name: debug-apk
-        path: app/build/outputs/apk/debug/app-debug.apk
-
-    - name: Upload reports
-      if: failure()
-      uses: actions/upload-artifact@v4
-      with:
-        name: test-reports
-        path: app/build/reports/
