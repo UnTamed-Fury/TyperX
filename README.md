@@ -48,6 +48,32 @@ TyperX is a comprehensive typing tutor application built for Android with Kotlin
 - Sound and haptic feedback
 - Comprehensive result analysis
 
+## GitHub Actions Workflows
+
+The project includes three required GitHub Actions workflows:
+
+### 1. Pull Request Check (`pr-check.yml`)
+- Runs automatically on pull requests to main branch
+- Manually triggerable with workflow_dispatch
+- Performs lint checks
+- Runs unit tests
+- Builds debug APK with Android 11+ minimum SDK
+- Uploads debug APK as artifact
+
+### 2. Test Commits (`test-commits.yml`)
+- Manual workflow (workflow_dispatch)
+- Allows testing on any specified branch
+- Builds release APK with Android 11+ minimum SDK
+- Runs unit tests
+- Uploads tested release APK as artifact
+
+### 3. Make Release (`release.yml`)
+- Manual workflow (workflow_dispatch)
+- Requires version input
+- Uses signing secrets to build signed APK
+- Creates GitHub release with APK attached
+- Enforces Android 11+ minimum SDK
+
 ## Architecture
 
 The application follows a clean architecture pattern with MVVM:
@@ -119,9 +145,9 @@ TyperX
 │   └── build.gradle
 ├── .github/
 │   └── workflows/
-│       ├── test-pr.yml                 # Test pull requests
-│       ├── test-changes.yml            # Test recent changes
-│       └── release.yml                 # Create releases
+│       ├── pr-check.yml                   # PR validation workflow
+│       ├── test-commits.yml               # Manual commit testing
+│       └── release.yml                    # Release creation workflow
 └── gradle/
     └── wrapper/
 ```
@@ -164,60 +190,13 @@ CREATE TABLE typing_sessions (
 3. Sync the project with Gradle files
 4. Build and run on an Android device or emulator
 
-## GitHub Actions Workflows
+## GitHub Actions Secrets Required
 
-The project includes three GitHub Actions workflows:
-
-### 1. Test Pull Request (`test-pr.yml`)
-- Runs on pull requests to main/develop branches
-- Executes unit tests
-- Builds debug APK
-- Runs lint checks
-- Uploads test reports
-
-### 2. Test Recent Changes (`test-changes.yml`)
-- Runs on pushes to main/develop/feature branches
-- Performs static analysis (ktlint, detekt)
-- Runs unit tests
-- Builds debug APK
-- Runs connected Android tests on emulator
-- Uploads APK artifact
-
-### 3. Create Release (`release.yml`)
-- Runs when tags are pushed (v*)
-- Runs tests
-- Builds release APK
-- Signs the APK
-- Creates GitHub release with changelog
-- Uploads signed APK to release
-
-## Running Workflows Locally
-
-To run the workflows locally for testing purposes:
-
-1. Install [Act](https://github.com/nektos/act) (GitHub Actions runner):
-   ```bash
-   # On Ubuntu/Debian
-   sudo apt-get install act
-   
-   # On macOS
-   brew install act
-   
-   # On Windows (using Chocolatey)
-   choco install act-cli
-   ```
-
-2. Run workflows locally:
-   ```bash
-   # Run all workflows
-   act
-   
-   # Run specific event
-   act pull_request
-   
-   # Run specific job
-   act -j test
-   ```
+For the release workflow to work, you need to set up these secrets in your repository:
+- `SIGNING_KEY` - Base64 encoded keystore file
+- `ALIAS` - Keystore alias
+- `KEY_STORE_PASSWORD` - Keystore password
+- `KEY_PASSWORD` - Key password
 
 ## Dependencies
 
@@ -229,38 +208,11 @@ The project uses the following key dependencies:
 - DataStore for preferences
 - Navigation Compose
 - Lifecycle utilities for ViewModel
-- Detekt for static analysis
-- Ktlint for code formatting
-
-## Development Best Practices
-
-1. Follow the existing code style and conventions
-2. Write unit tests for business logic
-3. Use meaningful commit messages
-4. Update the changelog for significant changes
-5. Run static analysis before committing:
-   ```bash
-   ./gradlew ktlintCheck detekt
-   ```
 
 ## Contributing
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Make your changes
-4. Run tests and static analysis
-5. Commit your changes (`git commit -m 'Add amazing feature'`)
-6. Push to the branch (`git push origin feature/amazing-feature`)
-7. Open a Pull Request
-
-## Changelog
-
-See [CHANGELOG.md](CHANGELOG.md) for a history of changes.
+Feel free to submit issues and enhancement requests. Pull requests are welcome!
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Support
-
-If you encounter any issues or have questions, please file an issue in the GitHub repository.
+This project is licensed under the MIT License.
