@@ -205,19 +205,22 @@ fun CircularTimerView(timeLeft: Long, totalTime: Long, modifier: Modifier = Modi
         (timeLeft.toFloat() / totalTime).coerceIn(0f, 1f)
     } else 0f
     
+    val surfaceVariant = MaterialTheme.colorScheme.surfaceVariant
+    val primary = MaterialTheme.colorScheme.primary
+
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
     ) {
         Canvas(modifier = Modifier.size(120.dp)) {
             val strokeWidth = 8.dp.toPx()
-            val radius = (size.minDimension - strokeWidth) / 2
-            val center = Offset(size.width / 2, size.height / 2)
+            val innerSize = size.copy(width = size.width - strokeWidth, height = size.height - strokeWidth)
+            val topLeft = Offset(strokeWidth / 2, strokeWidth / 2)
             
             // Background circle
             drawCircle(
-                color = MaterialTheme.colorScheme.surfaceVariant,
-                radius = radius,
+                color = surfaceVariant,
+                radius = (size.minDimension - strokeWidth) / 2,
                 center = center,
                 style = androidx.compose.ui.graphics.drawscope.Stroke(strokeWidth)
             )
@@ -225,11 +228,12 @@ fun CircularTimerView(timeLeft: Long, totalTime: Long, modifier: Modifier = Modi
             // Progress arc
             val sweepAngle = 360f * progress
             drawArc(
-                color = MaterialTheme.colorScheme.primary,
+                color = primary,
                 startAngle = -90f,
                 sweepAngle = sweepAngle,
-                center = center,
-                radius = radius,
+                useCenter = false,
+                topLeft = topLeft,
+                size = innerSize,
                 style = androidx.compose.ui.graphics.drawscope.Stroke(strokeWidth, cap = androidx.compose.ui.graphics.StrokeCap.Round)
             )
         }
