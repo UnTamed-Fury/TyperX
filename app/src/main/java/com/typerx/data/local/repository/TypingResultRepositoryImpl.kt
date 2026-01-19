@@ -4,6 +4,7 @@ import com.typerx.data.models.TypingResult
 import com.typerx.data.repository.TypingResultRepository
 import com.typerx.data.local.database.TypingResultDao
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class TypingResultRepositoryImpl @Inject constructor(
@@ -44,5 +45,9 @@ class TypingResultRepositoryImpl @Inject constructor(
     
     override fun getAverageAccuracy(): Flow<Double> {
         return dao.getAverageAccuracy().map { it ?: 0.0 }
+    }
+
+    override fun getResultCount(): Flow<Int> {
+        return dao.getResultCount()
     }
 }

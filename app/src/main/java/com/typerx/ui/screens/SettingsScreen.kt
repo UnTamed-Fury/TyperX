@@ -13,12 +13,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(settingsViewModel: SettingsViewModel = viewModel()) {
-    val fontSize by settingsViewModel.fontSize
-    val themeTypeIndex by settingsViewModel.themeType
-    val soundEnabled by settingsViewModel.soundEnabled
-    val hapticEnabled by settingsViewModel.hapticEnabled
+    val fontSize by settingsViewModel.fontSize.collectAsState()
+    val themeTypeIndex by settingsViewModel.themeType.collectAsState()
+    val soundEnabled by settingsViewModel.soundEnabled.collectAsState()
+    val hapticEnabled by settingsViewModel.hapticEnabled.collectAsState()
     
-    var selectedTheme by remember { mutableStateOf(ThemeType.values()[themeTypeIndex]) }
+    val selectedTheme = ThemeType.values()[themeTypeIndex]
     
     Column(
         modifier = Modifier
@@ -50,7 +50,6 @@ fun SettingsScreen(settingsViewModel: SettingsViewModel = viewModel()) {
                 RadioButton(
                     selected = selectedTheme == theme,
                     onClick = { 
-                        selectedTheme = theme
                         settingsViewModel.setThemeType(index)
                     }
                 )

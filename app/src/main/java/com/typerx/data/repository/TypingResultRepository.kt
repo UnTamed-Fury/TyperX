@@ -13,4 +13,5 @@ interface TypingResultRepository {
     fun getTopResults(limit: Int = 10): Flow<List<TypingResult>>
     fun getAverageWpm(): Flow<Double>
     fun getAverageAccuracy(): Flow<Double>
+    fun getResultCount(): Flow<Int>
 }

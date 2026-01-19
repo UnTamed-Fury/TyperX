@@ -21,22 +21,26 @@ import com.typerx.engine.AccuracyTracker
 import com.typerx.ui.components.TextInputView
 import com.typerx.ui.components.TimerView
 import com.typerx.ui.components.StatsCard
+import com.typerx.ui.components.StatChip
+import com.typerx.ui.components.VerticalDivider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.typerx.utils.SampleTextProvider
 import com.typerx.data.models.PracticeCategory
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.draw.shadow
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MoreVert
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TypingScreen(typingViewModel: TypingViewModel = viewModel()) {
     val typingEngine = typingViewModel.typingEngine
-    val session by typingEngine.sessionState
-    val timer by typingEngine.timerState
-    val progress by typingEngine.progressState
+    val session by typingEngine.sessionState.collectAsState()
+    val timer by typingEngine.timerState.collectAsState()
+    val progress by typingEngine.progressState.collectAsState()
     
     // Sample text for typing practice
-    val sampleText = SampleTextProvider.getSampleText(PracticeCategory.LOWERCASE_UPPERCASE, "en")
+    val sampleText = remember { SampleTextProvider.getSampleText(PracticeCategory.LOWERCASE_UPPERCASE, "en") }
     
     LaunchedEffect(Unit) {
         typingEngine.startNewSession(sampleText, duration = 60)
@@ -53,7 +57,8 @@ fun TypingScreen(typingViewModel: TypingViewModel = viewModel()) {
                 .padding(16.dp)
         ) {
             // Header with stats
-            session?.let { s ->
+            if (session != null) {
+                val s = session!!
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -96,10 +101,10 @@ fun TypingScreen(typingViewModel: TypingViewModel = viewModel()) {
             }
             
             // Timer with circular progress
-            session?.let { s ->
+            if (session != null) {
                 CircularTimerView(
                     timeLeft = timer,
-                    totalTime = s.duration.toLong(),
+                    totalTime = session!!.duration.toLong(),
                     modifier = Modifier
                         .size(120.dp)
                         .align(Alignment.CenterHorizontally)
@@ -108,7 +113,8 @@ fun TypingScreen(typingViewModel: TypingViewModel = viewModel()) {
             }
             
             // Text input area
-            session?.let { s ->
+            if (session != null) {
+                val s = session!!
                 Card(
                     modifier = Modifier
                         .weight(1f)
@@ -184,42 +190,14 @@ fun TypingScreen(typingViewModel: TypingViewModel = viewModel()) {
             contentColor = MaterialTheme.colorScheme.onPrimary
         ) {
             Icon(
-                imageVector = androidx.compose.material.icons.Icons.Default.MoreVert,
+                imageVector = Icons.Default.MoreVert,
                 contentDescription = "Options"
             )
         }
     }
 }
 
-@Composable
-fun StatChip(label: String, value: String, color: Color) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = value,
-            style = MaterialTheme.typography.headlineSmall,
-            fontWeight = FontWeight.Bold,
-            fontSize = 18.sp,
-            color = color
-        )
-        Text(
-            text = label,
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-    }
-}
 
-@Composable
-fun VerticalDivider() {
-    Divider(
-        modifier = Modifier
-            .fillMaxHeight()
-            .width(1.dp),
-        color = MaterialTheme.colorScheme.outline
-    )
-}
 
 @Composable
 fun CircularTimerView(timeLeft: Long, totalTime: Long, modifier: Modifier = Modifier) {

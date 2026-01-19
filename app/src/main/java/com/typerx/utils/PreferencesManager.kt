@@ -5,6 +5,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.map
 
@@ -15,8 +16,8 @@ class PreferencesManager(private val context: Context) {
     companion object {
         private val FONT_SIZE_KEY = intPreferencesKey("font_size")
         private val THEME_TYPE_KEY = intPreferencesKey("theme_type")
-        private val SOUND_ENABLED_KEY = intPreferencesKey("sound_enabled")
-        private val HAPTIC_ENABLED_KEY = intPreferencesKey("haptic_enabled")
+        private val SOUND_ENABLED_KEY = booleanPreferencesKey("sound_enabled")
+        private val HAPTIC_ENABLED_KEY = booleanPreferencesKey("haptic_enabled")
     }
     
     val fontSize = context.dataStore.data.map { preferences ->

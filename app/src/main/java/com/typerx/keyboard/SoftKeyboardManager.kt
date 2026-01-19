@@ -8,6 +8,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.KeyboardOptions
 
 @Composable
 fun PhysicalKeyboardHandler(
@@ -56,7 +57,7 @@ fun SoftKeyboardManager(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp),
-        keyboardOptions = androidx.compose.ui.text.input.KeyboardOptions(
+        keyboardOptions = KeyboardOptions(
             keyboardType = if(isHindiMode) KeyboardType.Text else keyboardType
         )
     )

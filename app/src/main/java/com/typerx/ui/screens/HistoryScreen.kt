@@ -13,14 +13,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.typerx.data.models.TypingResult
+import com.typerx.ui.components.StatChip
+import com.typerx.ui.components.VerticalDivider
 import java.text.SimpleDateFormat
 import java.util.*
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HistoryScreen(historyViewModel: HistoryViewModel = viewModel()) {
-    val results by historyViewModel.allResults
+    val results by historyViewModel.allResults.collectAsState()
     val formatter = SimpleDateFormat("MMM dd, yyyy HH:mm", Locale.getDefault())
     
     Column(
@@ -41,7 +45,7 @@ fun HistoryScreen(historyViewModel: HistoryViewModel = viewModel()) {
             
             IconButton(onClick = { /* Clear all history */ }) {
                 Icon(
-                    imageVector = androidx.compose.material.icons.Icons.Default.Delete,
+                    imageVector = Icons.Default.Delete,
                     contentDescription = "Clear History",
                     tint = MaterialTheme.colorScheme.error
                 )
@@ -65,16 +69,12 @@ fun HistoryScreen(historyViewModel: HistoryViewModel = viewModel()) {
                     .padding(16.dp),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                val avgWpm by historyViewModel.averageWpm
-                val avgAccuracy by historyViewModel.averageAccuracy
+                val avgWpm by historyViewModel.averageWpm.collectAsState()
+                val avgAccuracy by historyViewModel.averageAccuracy.collectAsState()
                 
-                StatItem(label = "Avg WPM", value = avgWpm.toInt().toString())
-                VerticalDivider(
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .width(1.dp)
-                )
-                StatItem(label = "Avg Acc", value = "${avgAccuracy.toInt()}%")
+                StatChip(label = "Avg WPM", value = avgWpm.toInt().toString(), color = MaterialTheme.colorScheme.primary)
+                VerticalDivider()
+                StatChip(label = "Avg Acc", value = "${avgAccuracy.toInt()}%", color = MaterialTheme.colorScheme.secondary)
             }
         }
         
@@ -154,31 +154,4 @@ fun HistoryItem(result: TypingResult, formatter: SimpleDateFormat) {
             )
         }
     }
-}
-
-@Composable
-fun StatItem(label: String, value: String) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(
-            text = value,
-            style = MaterialTheme.typography.headlineSmall,
-            fontWeight = FontWeight.Bold,
-            fontSize = 20.sp
-        )
-        Text(
-            text = label,
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-    }
-}
-
-@Composable
-fun VerticalDivider() {
-    Divider(
-        modifier = Modifier
-            .fillMaxHeight()
-            .width(1.dp),
-        color = MaterialTheme.colorScheme.outline
-    )
 }

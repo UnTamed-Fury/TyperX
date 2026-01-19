@@ -19,6 +19,10 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.typerx.R
+import com.typerx.ui.components.StatChip
+import com.typerx.ui.components.VerticalDivider
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.FlashOn
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -26,7 +30,7 @@ fun HomeScreen(
     navController: NavController = rememberNavController(),
     homeViewModel: HomeViewModel = viewModel()
 ) {
-    val resultCount by homeViewModel.resultCount
+    val resultCount by homeViewModel.resultCount.collectAsState()
     
     Box(
         modifier = Modifier
@@ -34,12 +38,12 @@ fun HomeScreen(
             .background(MaterialTheme.colorScheme.surface)
     ) {
         // Background decorative elements
-        androidx.compose.foundation.background(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = (-50).dp),
-            shape = RoundedCornerShape(bottomStart = 50.dp, bottomEnd = 50.dp),
-            color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
+                .padding(top = (-50).dp)
+                .clip(RoundedCornerShape(bottomStart = 50.dp, bottomEnd = 50.dp))
+                .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f))
         )
         
         Column(
@@ -105,11 +109,11 @@ fun HomeScreen(
                         .padding(20.dp),
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    StatItem(label = "Sessions", value = resultCount.toString())
+                    StatChip(label = "Sessions", value = resultCount.toString(), color = MaterialTheme.colorScheme.primary)
                     VerticalDivider()
-                    StatItem(label = "Best WPM", value = "?") // Would come from repository
+                    StatChip(label = "Best WPM", value = "?", color = MaterialTheme.colorScheme.secondary)
                     VerticalDivider()
-                    StatItem(label = "Streak", value = "0") // Would come from repository
+                    StatChip(label = "Streak", value = "0", color = MaterialTheme.colorScheme.tertiary)
                 }
             }
             
@@ -175,37 +179,9 @@ fun HomeScreen(
             contentColor = MaterialTheme.colorScheme.onPrimary
         ) {
             Icon(
-                imageVector = androidx.compose.material.icons.Icons.Default.FlashOn,
+                imageVector = Icons.Default.FlashOn,
                 contentDescription = "Quick Practice"
             )
         }
     }
-}
-
-@Composable
-fun StatItem(label: String, value: String) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(
-            text = value,
-            style = MaterialTheme.typography.headlineSmall,
-            fontWeight = FontWeight.Bold,
-            fontSize = 24.sp,
-            color = MaterialTheme.colorScheme.primary
-        )
-        Text(
-            text = label,
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-    }
-}
-
-@Composable
-fun VerticalDivider() {
-    Divider(
-        modifier = Modifier
-            .fillMaxHeight()
-            .width(1.dp),
-        color = MaterialTheme.colorScheme.outline
-    )
 }

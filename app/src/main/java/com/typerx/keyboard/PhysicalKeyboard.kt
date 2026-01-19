@@ -1,7 +1,9 @@
 package com.typerx.keyboard
 
 import android.view.KeyEvent
+import android.view.View
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.input.key.*
 
