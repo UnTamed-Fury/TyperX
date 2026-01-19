@@ -44,7 +44,7 @@ jobs:
         run: gradle clean
 
       - name: Build Release (Android 11+)
-        run: ./gradlew assembleRelease -PminSdk=30
+        run: gradle assembleRelease -PminSdk=30
 
       - name: Unit tests
         run: ./gradlew testReleaseUnitTest
