@@ -1,6 +1,5 @@
 package com.typerx.ui.screens
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -9,21 +8,16 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.typerx.engine.WpmCalculator
-import com.typerx.engine.AccuracyTracker
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.typerx.ui.components.TextInputView
-import com.typerx.ui.components.TimerView
-import com.typerx.ui.components.StatsCard
 import com.typerx.ui.components.StatChip
 import com.typerx.ui.components.VerticalDivider
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.typerx.utils.SampleTextProvider
 import com.typerx.data.models.PracticeCategory
 import androidx.compose.runtime.getValue
@@ -37,7 +31,6 @@ fun TypingScreen(typingViewModel: TypingViewModel = viewModel()) {
     val typingEngine = typingViewModel.typingEngine
     val session by typingEngine.sessionState.collectAsState()
     val timer by typingEngine.timerState.collectAsState()
-    val progress by typingEngine.progressState.collectAsState()
     
     // Sample text for typing practice
     val sampleText = remember { SampleTextProvider.getSampleText(PracticeCategory.LOWERCASE_UPPERCASE, "en") }
@@ -197,8 +190,6 @@ fun TypingScreen(typingViewModel: TypingViewModel = viewModel()) {
     }
 }
 
-
-
 @Composable
 fun CircularTimerView(timeLeft: Long, totalTime: Long, modifier: Modifier = Modifier) {
     val progress = if (totalTime > 0) {
@@ -214,15 +205,21 @@ fun CircularTimerView(timeLeft: Long, totalTime: Long, modifier: Modifier = Modi
     ) {
         Canvas(modifier = Modifier.size(120.dp)) {
             val strokeWidth = 8.dp.toPx()
-            val innerSize = size.copy(width = size.width - strokeWidth, height = size.height - strokeWidth)
-            val topLeft = Offset(strokeWidth / 2, strokeWidth / 2)
+            val diameter = size.minDimension
+            val radius = (diameter - strokeWidth) / 2
+            val center = Offset(size.width / 2, size.height / 2)
+            val topLeftOffset = Offset(
+                x = (size.width - (diameter - strokeWidth)) / 2,
+                y = (size.height - (diameter - strokeWidth)) / 2
+            )
+            val arcSize = androidx.compose.ui.geometry.Size(diameter - strokeWidth, diameter - strokeWidth)
             
             // Background circle
             drawCircle(
                 color = surfaceVariant,
-                radius = (size.minDimension - strokeWidth) / 2,
+                radius = radius,
                 center = center,
-                style = androidx.compose.ui.graphics.drawscope.Stroke(strokeWidth)
+                style = Stroke(strokeWidth)
             )
             
             // Progress arc
@@ -232,9 +229,9 @@ fun CircularTimerView(timeLeft: Long, totalTime: Long, modifier: Modifier = Modi
                 startAngle = -90f,
                 sweepAngle = sweepAngle,
                 useCenter = false,
-                topLeft = topLeft,
-                size = innerSize,
-                style = androidx.compose.ui.graphics.drawscope.Stroke(strokeWidth, cap = androidx.compose.ui.graphics.StrokeCap.Round)
+                topLeft = topLeftOffset,
+                size = arcSize,
+                style = Stroke(strokeWidth, cap = StrokeCap.Round)
             )
         }
         

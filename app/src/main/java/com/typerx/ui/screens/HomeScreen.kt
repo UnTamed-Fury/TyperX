@@ -19,7 +19,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.typerx.R
 import com.typerx.ui.components.StatChip
 import com.typerx.ui.components.VerticalDivider
 import androidx.compose.material.icons.Icons
