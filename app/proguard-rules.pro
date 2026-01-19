@@ -1,6 +1,9 @@
 # Add project specific ProGuard rules here.
-# You can control the set of absolute coordinates preserved with
-# android.absoluteCoordiates.preserved
+# You can control the set of applied configuration files using the
+# proguardFiles property in build.gradle.
+#
+# For more details, see
+#   http://developer.android.com/guide/developing/tools/proguard.html
 
 # If your project uses WebView with JS, uncomment the following
 # and specify the fully qualified class name to the JavaScript interface
@@ -13,50 +16,37 @@
 # debugging stack traces.
 #-keepattributes SourceFile,LineNumberTable
 
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
-
-# Hilt
--dontwarn dagger.hilt.**
-
-# Room
--keep class com.typerx.data.local.database.** { *; }
--keep class com.typerx.data.models.** { *; }
-
-# Retrofit
--dontwarn retrofit2.**
--keep class retrofit2.** { *; }
--keepattributes Signature
--keepattributes Exceptions
-
-# Gson
--keepattributes Signature
--keepattributes *Annotation*
--keep class com.google.gson.** { *; }
--keep class com.typerx.data.models.** { *; }
-
-# RxJava
--dontwarn sun.misc.**
--keepclassmembers class rx.internal.util.unsafe.*ArrayQueue*Field* {
-    long producerIndex;
-    long consumerIndex;
-}
--keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueProducerNodeRef {
-    rx.internal.util.atomic.LinkedQueueNode producerNode;
-}
--keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueConsumerNodeRef {
-    rx.internal.util.atomic.LinkedQueueNode consumerNode;
+# Keep the R.styleable and similar resource constants
+-keepclassmembers public class **.R$* {
+    public static <fields>;
 }
 
-# Kotlin
--keep class kotlin.reflect.jvm.internal.impl.load.kotlin.** { *; }
--dontwarn org.jetbrains.kotlin.**
-
-# Compose
+# Keep the classes that are used for reflection
+-keep class androidx.lifecycle.** { *; }
 -keep class androidx.compose.** { *; }
+-keep class androidx.navigation.** { *; }
+-keep class dagger.hilt.** { *; }
+-keep class javax.inject.** { *; }
+
+# Keep Room database classes
+-keep class * extends androidx.room.Entity
+-keep class * extends androidx.room.Dao
+-keep class * extends androidx.room.Database
+
+# Keep Compose internal classes if they're being stripped
 -dontwarn androidx.compose.**
 
-# Accompanist
--keep class com.google.accompanist.** { *; }
--dontwarn com.google.accompanist.**
+# Speed up builds by skipping some optimizations during development
+-optimizations !code/simplification/arithmetic,!code/simplification/cast,!field/*,!class/merging/*
+
+# Skip preverification for faster builds
+-dontpreverify
+
+# Keep Kotlin metadata
+-keep class kotlin.Metadata { *; }
+-keep class kotlin.jvm.** { *; }
+-keep class kotlin.collections.** { *; }
+
+# Keep Timber logging
+-keep class timber.log.** { *; }
+-dontwarn timber.log.**

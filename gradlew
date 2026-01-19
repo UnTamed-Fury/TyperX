@@ -104,15 +104,14 @@ else
     JAVACMD="java"
     which java >/dev/null 2>&1 || die "ERROR: JAVA_HOME is not set and no 'java' command could be found in your PATH.
 
-Please set the JAVA_HOME variable in your environment to match the
-location of your Java installation."
+Please set the JAVA_HOME variable in your environment to match the location of your Java installation."
 fi
 
 # Increase the maximum file descriptors if we can.
 if $cygwin || $darwin || $msys ; then
     MAX_FD_LIMIT=`ulimit -H -n`
     if [ $? -eq 0 ] ; then
-        if [ "$MAX_FD_LIMIT" = "unlimited" ] || [ "$MAX_FD_LIMIT" -gt "$MAX_FD" ] ; then
+        if [ "$MAX_FD_LIMIT" = "unlimited" ] || [ "$MAX_FD_LIMIT" > "$MAX_FD" ] ; then
             [ "$MAX_FD" = "maximum" ] && MAX_FD="$MAX_FD_LIMIT"
             ulimit -n $MAX_FD
             if [ $? -ne 0 ] ; then

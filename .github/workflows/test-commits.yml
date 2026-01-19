@@ -54,8 +54,8 @@ jobs:
       - name: Clean project
         run: gradle clean --no-daemon
 
-      - name: Build release APK
-        run: gradle assembleRelease -PminSdk=30 --no-daemon
+      - name: Build debug APK
+        run: gradle assembleDebug -PminSdk=30 --no-daemon
 
       - name: Run unit tests
         run: gradle testReleaseUnitTest --no-daemon
@@ -63,7 +63,7 @@ jobs:
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: tested-release
-          path: app/build/outputs/apk/release/*.apk
+          name: tested-debug
+          path: app/build/outputs/apk/debug/*.apk
           if-no-files-found: error
           retention-days: 7
