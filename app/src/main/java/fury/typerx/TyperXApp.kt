@@ -2,7 +2,7 @@ package fury.typerx
 
 import android.app.Application
 import timber.log.Timber
-import com.typerx.BuildConfig
+import fury.typerx.BuildConfig
 
 class TyperXApp : Application() {
     override fun onCreate() {
