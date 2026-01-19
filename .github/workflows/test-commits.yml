@@ -35,20 +35,13 @@ jobs:
           chmod 644 gradle/wrapper/gradle-wrapper.jar
           chmod 644 gradle/wrapper/gradle-wrapper.properties
 
-      - name: Diagnose wrapper
-        run: |
-          ls -lh gradle/wrapper/gradle-wrapper.jar
-          file gradle/wrapper/gradle-wrapper.jar
-          sha256sum gradle/wrapper/gradle-wrapper.jar
-          if strings gradle/wrapper/gradle-wrapper.jar | grep -q GradleWrapperMain; then
-            echo "Wrapper class found"
-          else
-            echo "Wrapper class NOT found - JAR likely corrupted"
-            exit 1
-          fi
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          gradle-version: 8.1
 
       - name: Clean
-        run: ./gradlew clean
+        run: gradle clean
 
       - name: Build Release (Android 11+)
         run: ./gradlew assembleRelease -PminSdk=30
