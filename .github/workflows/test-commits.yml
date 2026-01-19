@@ -35,10 +35,17 @@ jobs:
           chmod 644 gradle/wrapper/gradle-wrapper.jar
           chmod 644 gradle/wrapper/gradle-wrapper.properties
 
-      - name: Validate Gradle Wrapper
+      - name: Diagnose wrapper
         run: |
-          jar -tf gradle/wrapper/gradle-wrapper.jar | grep -i GradleWrapperMain
-          echo "Wrapper OK"
+          ls -lh gradle/wrapper/gradle-wrapper.jar
+          file gradle/wrapper/gradle-wrapper.jar
+          sha256sum gradle/wrapper/gradle-wrapper.jar
+          if strings gradle/wrapper/gradle-wrapper.jar | grep -q GradleWrapperMain; then
+            echo "Wrapper class found"
+          else
+            echo "Wrapper class NOT found - JAR likely corrupted"
+            exit 1
+          fi
 
       - name: Clean
         run: ./gradlew clean
