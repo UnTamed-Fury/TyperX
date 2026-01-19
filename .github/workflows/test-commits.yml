@@ -1,42 +1,56 @@
-steps:
-  - uses: actions/checkout@v4
-    with:
-      ref: ${{ inputs.branch }}
+name: Test Commits
 
-  - name: Setup Java
-    uses: actions/setup-java@v4
-    with:
-      distribution: temurin
-      java-version: 17
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: "Branch to test"
+        required: true
+        default: "main"
 
-  - name: Setup Android SDK
-    uses: android-actions/setup-android@v3
-    with:
-      packages: 'platforms;android-34 build-tools;34.0.0 platform-tools'
-      accept-android-sdk-licenses: true
+jobs:
+  test:
+    runs-on: ubuntu-latest
 
-  - name: Fix Gradle Wrapper Permissions
-    run: |
-      chmod +x gradlew
-      chmod 644 gradle/wrapper/gradle-wrapper.jar
-      chmod 644 gradle/wrapper/gradle-wrapper.properties
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.branch }}
 
-  - name: Validate Gradle Wrapper
-    run: |
-      jar -tf gradle/wrapper/gradle-wrapper.jar | grep -i GradleWrapperMain
-      echo "Wrapper OK"
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
 
-  - name: Clean
-    run: ./gradlew clean
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+        with:
+          packages: 'platforms;android-34 build-tools;34.0.0 platform-tools'
+          accept-android-sdk-licenses: true
 
-  - name: Build Release (Android 11+)
-    run: ./gradlew assembleRelease -PminSdk=30
+      - name: Fix Gradle Wrapper Permissions
+        run: |
+          chmod +x gradlew
+          chmod 644 gradle/wrapper/gradle-wrapper.jar
+          chmod 644 gradle/wrapper/gradle-wrapper.properties
 
-  - name: Unit tests
-    run: ./gradlew testReleaseUnitTest
+      - name: Validate Gradle Wrapper
+        run: |
+          jar -tf gradle/wrapper/gradle-wrapper.jar | grep -i GradleWrapperMain
+          echo "Wrapper OK"
 
-  - name: Upload APK
-    uses: actions/upload-artifact@v4
-    with:
-      name: tested-release
-      path: app/build/outputs/apk/release/*.apk
+      - name: Clean
+        run: ./gradlew clean
+
+      - name: Build Release (Android 11+)
+        run: ./gradlew assembleRelease -PminSdk=30
+
+      - name: Unit tests
+        run: ./gradlew testReleaseUnitTest
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: tested-release
+          path: app/build/outputs/apk/release/*.apk
