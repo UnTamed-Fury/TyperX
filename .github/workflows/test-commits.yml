@@ -58,7 +58,7 @@ jobs:
         run: gradle assembleDebug -PminSdk=30 --no-daemon
 
       - name: Run unit tests
-        run: gradle testReleaseUnitTest --no-daemon
+        run: gradle testDebugUnitTest --no-daemon
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
