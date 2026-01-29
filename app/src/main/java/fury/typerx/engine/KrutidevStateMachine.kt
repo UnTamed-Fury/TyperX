@@ -12,6 +12,7 @@ class KrutidevStateMachine {
     }
 
     fun handleBackspace(currentText: String): String {
+        // TODO: Implement logic to remove full logical glyph clusters for CPCT compliance
         if (currentText.isNotEmpty()) {
             return currentText.dropLast(1)
         }

@@ -51,7 +51,7 @@ object RemingtonKeyMapper {
             
             Key.LeftBracket -> if (isShift) '{' else '['
             Key.RightBracket -> if (isShift) '}' else ']'
-            Key.Backslash -> if (isShift) '|' else '\'
+            Key.Backslash -> if (isShift) '|' else '\\'
             Key.Semicolon -> if (isShift) ':' else ';'
             Key.Apostrophe -> if (isShift) '"' else "'"
             Key.Comma -> if (isShift) '<' else ','

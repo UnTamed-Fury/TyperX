@@ -53,14 +53,14 @@ class TypingEngine {
     private fun startTimer() {
         timerJob = scope.launch {
             while (_state.value.isRunning && _state.value.timeRemaining > 0) {
-                delay(1000)
+                delay(100) // Check more frequently
                 _state.update { s ->
-                    val newTime = s.timeRemaining - 1
-                    if (newTime <= 0) {
-                         // We will handle finish in the next update cycle or here
-                         // We need to ensure we don't update if cancelled
-                    }
-                    s.copy(timeRemaining = newTime)
+                    val elapsed = (System.currentTimeMillis() - s.startTime) / 1000
+                    val newTime = (s.totalTime - elapsed).toInt()
+                    
+                    // Prevent negative time
+                    val safeTime = if (newTime < 0) 0 else newTime
+                    s.copy(timeRemaining = safeTime)
                 }
                 
                 if (_state.value.timeRemaining <= 0) {

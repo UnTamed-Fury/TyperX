@@ -36,6 +36,10 @@ class AccuracyTracker {
                 errors++
             }
         }
+        // Count extra typed characters as errors
+        if (typed.length > target.length) {
+            errors += (typed.length - target.length)
+        }
         return errors
     }
 }
